@@ -1,0 +1,27 @@
+<!-- 用 div 替代 p 标签，避免 p 标签的默认样式干扰 -->
+<div style="margin: 0; padding: 5px 0; font-size: 16px; line-height: 1.2;">
+    <!-- 所有元素都设为 inline-block，强制同一行 -->
+    <span style="display: inline-block; vertical-align: middle;">
+        <a href="{% url 'learning_logs:index' %}">Learning 笔记</a> - 
+        <a href="{% url 'learning_logs:topics' %}">Topics</a>
+    </span>
+    {% if user.is_authenticated %}
+        <span style="display: inline-block; vertical-align: middle; margin-left: 8px;">
+            你好，{{ user.username }}。
+        </span>
+        <!-- 表单用 inline-block，彻底解决行内显示问题 -->
+        <form action="{% url 'users:logout' %}" method="post" style="display: inline-block; margin: 0; padding: 0; vertical-align: middle; margin-left: 8px;">
+            {% csrf_token %}
+            <button type="submit" style="border: none; background: transparent; color: #0066cc; text-decoration: underline; cursor: pointer; padding: 0; margin: 0; font-size: 16px; line-height: 1.2;">
+                退出登录
+            </button>
+        </form>
+    {% else %}
+        <span style="display: inline-block; vertical-align: middle; margin-left: 8px;">
+            <a href="{% url 'users:register' %}">注册入口</a> -
+            <a href="{% url 'users:login' %}">登录入口</a>
+        </span>
+    {% endif %}
+</div>
+
+{% block content %} {% endblock content %}

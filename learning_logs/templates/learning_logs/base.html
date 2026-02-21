@@ -1,0 +1,70 @@
+{% load bootstrap4 %}  <!-- 仅保留加载bootstrap4，用于后续表单渲染，不影响CSS/JS加载 -->
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <title>学习笔记</title>
+
+  <!-- 彻底删除 {% bootstrap_css %} 标签，改用国内CDN直接引入Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+
+  <!-- 彻底删除 {% bootstrap_javascript %} 标签，改用国内CDN引入jQuery+Bootstrap JS -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+  
+  <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+    <a class="navbar-brand" href="{% url 'learning_logs:index'%}">学习笔记</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+      data-target="#navbarCollapse" aria-controls="navbarCollapse"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'learning_logs:topics'%}">主题</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item d-flex align-items-center mr-3">
+            <span class="navbar-text">您好,{{ user.username}}.</span>
+          </li>
+          <li class="nav-item">
+            <!-- 关键修改：将退出登录链接改为表单格式 -->
+            <form action="{% url 'users:logout' %}" method="post" class="mb-0">
+              {% csrf_token %}  <!-- Django必须的CSRF令牌，防止跨站请求伪造 -->
+              <button type="submit" class="nav-link  btn btn-link ">退出登录</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item mr-2">
+            <a class="nav-link" href="{% url 'users:register' %}">注册</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:login' %}">登录入口</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <main role="main" class="container">
+    <div class="pb-2 mb-2 border-bottom">
+      {% block page_header %} {% endblock page_header %}
+    </div>
+    <div>
+      {% block content %} {% endblock content %}
+    </div>
+  </main>
+
+</body>
+</html>

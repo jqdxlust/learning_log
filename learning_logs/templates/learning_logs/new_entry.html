@@ -1,0 +1,20 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+  <h3 class="mb-2">
+  <a href="{% url 'learning_logs:topic' topic.id %}" class="text-primary text-decoration-none hover:text-primary-dark">
+    {{ topic }}
+  </a>
+  </h3>
+
+  <p>增加一条新的记录</p>
+
+  <form action="{% url 'learning_logs:new_entry' topic.id %}" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button name="submit" class="btn btn-secondary ">增加记录</button>
+  </form>
+
+{% endblock content %}

@@ -1,0 +1,60 @@
+{% extends "learning_logs/base.html" %}
+{% block page_header %}
+  <h2 class="mb-4">欢迎注册学习笔记</h2>
+{% endblock page_header %}
+
+{% block content %}
+  <!-- 表单容器：美化布局 -->
+  <div class="card bg-white p-5 rounded shadow-sm" style="max-width: 700px; margin: 0 auto;">
+    <form method="post" action="{% url 'users:register' %}" class="mt-2">
+      {% csrf_token %}
+      
+      <!-- 显示表单错误提示 -->
+      {% if form.errors %}
+        <div class="alert alert-danger mb-4">
+          <strong>注册失败，请修正以下错误：</strong>
+          {% for field in form %}
+            {% if field.errors %}
+              <p class="mb-1">{{ field.label }}: {{ field.errors|striptags }}</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- 手动渲染每个表单字段（原生HTML，无语法错误） -->
+      {% for field in form %}
+        <div class="form-group row mb-3">
+          <!-- 表单标签 -->
+          <label for="{{ field.id_for_label }}" class="col-sm-2 col-form-label font-weight-normal h5 mb-2">
+            {{ field.label }}
+          </label>
+          <!-- 输入框：纯HTML写法，直接加样式类 -->
+          <div class="col-sm-10">
+            <input 
+              type="{{ field.field.widget.input_type }}"
+              name="{{ field.name }}"
+              id="{{ field.id_for_label }}"
+              class="form-control form-control-lg"  <!-- 直接加Bootstrap样式类 -->
+              {% if field.value %}value="{{ field.value }}"{% endif %}
+              {% if field.field.required %}required{% endif %}>
+            <!-- 显示帮助文本（如密码要求） -->
+            {% if field.help_text %}
+              <small class="form-text text-muted mt-1">{{ field.help_text|safe }}</small>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <!-- 隐藏域（修正拼写错误） -->
+      <input type="hidden" name="next" value="{% url 'learning_logs:index'%}" />
+      
+      <!-- 注册按钮：美化样式 -->
+      <button name="submit" class="btn btn-success btn-lg px-5 py-2 mt-3">完成注册</button>
+      
+      <!-- 登录引导链接 -->
+      <div class="mt-4 text-muted">
+        已有账号？<a href="{% url 'users:login' %}" class="text-primary">立即登录</a>
+      </div>
+    </form>
+  </div>
+{% endblock content %}

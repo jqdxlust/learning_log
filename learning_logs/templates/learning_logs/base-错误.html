@@ -1,0 +1,15 @@
+<p>
+	<a href="{% url 'learning_logs:index' %}">Learning Log</a> - 
+	<a href="{% url 'learning_logs:topics' %}">Topics</a>
+	{% if user.is_authenticated %}
+	  你好，{{ user.username }}。
+	  <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
+          {% csrf_token %}  
+          <button type="submit" style="border: none; background: none; color: blue; text-decoration: underline; cursor: pointer;">退出登录</button>
+      </form>
+	{% else %}
+	  <a href="{% url 'users:login' %}">登录入口</a>
+	{% endif %}
+</p>
+
+{% block content %} {% endblock content %}
